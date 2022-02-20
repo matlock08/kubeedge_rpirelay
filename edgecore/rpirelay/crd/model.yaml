@@ -1,0 +1,43 @@
+apiVersion: devices.kubeedge.io/v1alpha2
+kind: DeviceModel
+metadata:
+  name: relay-model
+  namespace: default
+spec:
+  properties:
+    - name: ch1
+      description: Indicates whether the ch1 relay is ON/OFF
+      type:
+        string:
+          accessMode: ReadWrite
+          defaultValue: 'OFF'
+    - name: ch2
+      description: Indicates whether the ch2 relay is ON/OFF
+      type:
+        string:
+          accessMode: ReadWrite
+          defaultValue: 'OFF'
+    - name: ch3
+      description: Indicates whether the ch3 relay is ON/OFF
+      type:
+        string:
+          accessMode: ReadWrite
+          defaultValue: 'OFF'
+    - name: ch1-pin-number
+      description: Indicates ch1 relay pin munber
+      type:
+        int:
+          accessMode: ReadOnly
+          defaultValue: 25
+    - name: ch2-pin-number
+      description: Indicates ch2 relay pin munber
+      type:
+        int:
+          accessMode: ReadOnly
+          defaultValue: 28
+    - name: ch3-pin-number
+      description: Indicates ch3 relay pin munber
+      type:
+        int:
+          accessMode: ReadOnly
+          defaultValue: 29

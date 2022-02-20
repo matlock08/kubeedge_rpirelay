@@ -1,0 +1,49 @@
+apiVersion: devices.kubeedge.io/v1alpha2
+kind: Device
+metadata:
+  name: relay-instance-01
+  labels:
+    description: Light
+    model: relay-model
+spec:
+  deviceModelRef:
+    name: relay-model
+  nodeSelector:
+    nodeSelectorTerms:
+      - matchExpressions:
+          - key: ''
+            operator: In
+            values:
+              - node1 # give your edge node name
+status:
+  twins:
+    - desired:
+        metadata:
+          type: string
+        value: "OFF"
+      propertyName: ch1
+      reported:
+        metadata:
+          timestamp: "1576146376369"
+          type: string
+        value: "OFF"
+    - desired:
+        metadata:
+          type: string
+        value: "OFF"
+      propertyName: ch2
+      reported:
+        metadata:
+          timestamp: "1576146376370"
+          type: string
+        value: "OFF"
+    - desired:
+        metadata:
+          type: string
+        value: "OFF"
+      propertyName: ch3
+      reported:
+        metadata:
+          timestamp: "1576146376369"
+          type: string
+        value: "OFF"
