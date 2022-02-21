@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"context"
-	"fmt"
 	
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/apimachinery/pkg/runtime/schema"
@@ -51,8 +50,6 @@ func getRelays(client dynamic.Interface) []string  {
 		result = append(result, device.GetName() )
 		
     }
-
-	fmt.Printf("\nDevice: %s\n", result )
 
 	return result
 }
