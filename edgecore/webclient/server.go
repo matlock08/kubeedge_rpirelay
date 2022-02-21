@@ -14,6 +14,14 @@ import (
 
 var dynamicClient dynamic.Interface
 
+func GetRelays(c echo.Context) error {
+	
+	
+	result := getRelays(dynamicClient )
+
+	return c.JSON(http.StatusOK, result )
+}
+
 // http://localhost:1323/device/relay-instance-01
 func GetRelayState(c echo.Context) error {
 	deviceName := c.Param("data")
@@ -32,7 +40,7 @@ func PathRelayState(c echo.Context) error {
 		Device string `json:"device"`
 		CH1Value string `json:"ch1"`
 		CH2Value string `json:"ch2"`
-		CH3Value string `json:"ch2"`
+		CH3Value string `json:"ch3"`
 	 }
 	 deviceRelay := DeviceRelay{}
 	 defer c.Request().Body.Close()
@@ -81,6 +89,8 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
+
+	e.GET("/device",GetRelays)
 
 	e.GET("/device/:data",GetRelayState)
 

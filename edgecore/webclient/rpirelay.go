@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"context"
+	"fmt"
 	
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/apimachinery/pkg/runtime/schema"
@@ -25,6 +26,35 @@ type patchStringValue struct {
 	Op    string `json:"op"`
 	Path  string `json:"path"`
 	Value string `json:"value"`
+}
+
+func getRelays(client dynamic.Interface) []string  {
+	//  Create a GVR which represents an Istio Virtual Service.
+	relayServiceGVR := schema.GroupVersionResource{
+		Group:    "devices.kubeedge.io",
+        Version:  "v1alpha2",
+        Resource: "devices",
+	}
+	var result []string
+
+	listOptions := metav1.ListOptions{}
+
+	//  List all of the Virtual Services.
+    devices, err := client.Resource(relayServiceGVR).Namespace("default").List(context.TODO(), listOptions)
+    
+    if err != nil {
+		panic(err.Error())
+	}	
+
+    for _, device := range devices.Items {
+		
+		result = append(result, device.GetName() )
+		
+    }
+
+	fmt.Printf("\nDevice: %s\n", result )
+
+	return result
 }
 
 func getRelayState(client dynamic.Interface, deviceName string) (string, string, string, string)  {
