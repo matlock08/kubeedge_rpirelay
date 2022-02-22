@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webclient
+  labels:
+    app: relay
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webclient
+  template:
+    metadata:
+      labels:
+        app: webclient
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/hostname: minikube
+      containers:
+      - name: webclient
+        image: matlock08/kubeedge-client:0.0.1
+        command: ["/client/client"]
+        args: [""]
+        ports:
+          - containerPort: 1323
+        imagePullPolicy: Always
+        securityContext:
+          privileged: true
+      restartPolicy: Always
