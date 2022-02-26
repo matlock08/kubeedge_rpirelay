@@ -2,6 +2,7 @@ apiVersion: devices.kubeedge.io/v1alpha2
 kind: Device
 metadata:
   name: relay-instance-01
+  namespace: default
   labels:
     description: Light
     model: relay-model

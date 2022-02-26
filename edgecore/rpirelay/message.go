@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 	"strings"
 	"sync"
 	"time"
@@ -108,7 +107,7 @@ func loadConfigMap() error {
 			}
 		}
 	}
-	fmt.Printf("Finally get wpi pin number from configmap: ch1 %d ch2 %d ch3 %d\n",
+	fmt.Printf("Get wpi pin number from configmap: ch1 %d ch2 %d ch3 %d\n",
 		ch1_wpi_num, ch2_wpi_num, ch3_wpi_num)
 
 	SetOutput(ch1_wpi_num)
@@ -119,16 +118,28 @@ func loadConfigMap() error {
 
 func InitCLient() MQTT.Client {
 	fmt.Println("init client ...")
+	fmt.Println("DeviceID", deviceID)
+	fmt.Println("mqtturl", mqtturl)
+
 	onceClient.Do(func() {
-		opts := MQTT.NewClientOptions().AddBroker(mqtturl).SetClientID("zhangjie-test").SetCleanSession(false)
+		opts := MQTT.NewClientOptions().AddBroker(mqtturl).SetClientID(deviceID + "-client").SetCleanSession(true)
 		opts = opts.SetKeepAlive(10)
 		opts = opts.SetOnConnectHandler(func(c MQTT.Client) {
 			topic := DeviceETPrefix + deviceID + TwinETUpdateDetalSuffix
+			fmt.Println("Connected trying to subscribe: ", topic)
 			if token := c.Subscribe(topic, 0, OperateUpdateDetalSub); token.Wait() && token.Error() != nil {
-				fmt.Println("subscribe: ", token.Error())
-				os.Exit(1)
+				fmt.Println("subscribe error: ", token.Error())
+				//os.Exit(1)
 			}
 		})
+		opts = opts.SetConnectionLostHandler(func(c MQTT.Client, err error) {
+			fmt.Println("connection lost: ", err.Error())
+			//os.Exit(1)
+		})
+
+		//opts.SetAutoReconnect(true)
+		//opts.SetMaxReconnectInterval(10 * time.Second)
+
 		Client = MQTT.NewClient(opts)
 	})
 	return Client

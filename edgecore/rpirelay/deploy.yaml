@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rpirelay
+  namespace: default
   labels:
     app: relay
 spec:
@@ -16,7 +17,8 @@ spec:
     spec:
       hostNetwork: true
       nodeSelector:
-        kubernetes.io/hostname: node1
+        devicetype: raspberrypi
+        rpirelay: 'True'
       containers:
       - name: rpirelay
         image: matlock08/kubeedge-relay:0.0.1

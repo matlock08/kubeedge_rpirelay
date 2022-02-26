@@ -13,6 +13,7 @@ func main() {
 
 	InitCLient()
 
+	fmt.Println("Connecting......... ")
 	if token := Client.Connect(); token.Wait() && token.Error() != nil {
 		fmt.Println("connect info: ", token.Error())
 		os.Exit(1)

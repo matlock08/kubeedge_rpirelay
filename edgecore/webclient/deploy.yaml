@@ -15,8 +15,13 @@ spec:
         app: webclient
     spec:
       hostNetwork: true
-      nodeSelector:
-        kubernetes.io/hostname: minikube
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/edge
+                operator: DoesNotExist                
       containers:
       - name: webclient
         image: matlock08/kubeedge-client:0.0.1
