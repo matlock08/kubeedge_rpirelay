@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudcore-balancer
+  namespace: kubeedge
+  annotations:
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
+    service.beta.kubernetes.io/do-loadbalancer-healthcheck-port: "10000"
+    service.beta.kubernetes.io/do-loadbalancer-healthcheck-protocol: "tcp"
+    service.beta.kubernetes.io/do-loadbalancer-size-unit: "1"
+    service.beta.kubernetes.io/do-loadbalancer-name: "kubeedge-balancer"    
+spec:
+  type: LoadBalancer
+  selector:
+    k8s-app: kubeedge
+    kubeedge: cloudcore
+  ports:
+    - name: cloudhub
+      protocol: TCP
+      port: 10000
+      targetPort: 10000
+    - name: cloudhub-quic
+      protocol: TCP
+      port: 10001
+      targetPort: 10001
+    - name: cloudhub-https
+      protocol: TCP
+      port: 10002
+      targetPort: 10002
+    - name: cloudstream
+      protocol: TCP
+      port: 10003
+      targetPort: 10003
+    - name: tunnelport
+      protocol: TCP
+      port: 10004
+      targetPort: 10004
+    
