@@ -17,8 +17,7 @@ spec:
     spec:
       hostNetwork: true
       nodeSelector:
-        devicetype: raspberrypi
-        rpirelay: 'True'
+        kubernetes.io/hostname: node1
       containers:
       - name: rpirelay
         image: matlock08/kubeedge-relay:0.0.1
