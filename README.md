@@ -1,6 +1,7 @@
 # KubeEdge sample rpirelay
 
 
+helm upgrade --install cloudcore ./cloudcore --namespace kubeedge --create-namespace -f ./cloudcore/values.yaml --kubeconfig 
 
 kubectl create clusterrolebinding service-reader-pod --clusterrole=service-reader  --serviceaccount=default:default
 

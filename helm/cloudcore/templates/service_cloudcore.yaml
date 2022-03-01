@@ -10,7 +10,7 @@ spec:
   {{- if and (eq .Values.cloudCore.service.type "NodePort") (eq .Values.cloudCore.hostNetWork "false") }}
   type: {{ .Values.cloudCore.service.type }}
   {{- else }}
-  type: CloudIP
+  type: ClusterIP
   {{- end }}
   ports:
   - port: 10000
