@@ -232,35 +232,3 @@ func UpdateActualDeviceStatus() {
 type DeviceStateUpdate struct {
 	State string `json:"state,omitempty"`
 }
-
-/*
-func ChangeDeviceState(state string) {
-	fmt.Println("Changing the state of the device to online")
-	var deviceStateUpdateMessage DeviceStateUpdate
-	deviceStateUpdateMessage.State = state
-	stateUpdateBody, err := json.Marshal(deviceStateUpdateMessage)
-	if err != nil {
-		log.Fatalf("Error:   %v", err)
-	}
-	deviceStatusUpdate := DeviceETPrefix + deviceID + DeviceETStateUpdateSuffix
-	token := Client.Publish(deviceStatusUpdate, 0, false, stateUpdateBody)
-	if token.Wait() && token.Error() != nil {
-		log.Fatalf("client.publish() Error in device state update  is  %v", token.Error())
-	}
-}
-*/
-
-//getTwin function is used to get the device twin details from the edge
-/*
-func GetTwin(updateMessage dttype.DeviceTwinUpdate) {
-	getTwin := DeviceETPrefix + deviceID + TwinETGetSuffix
-	twinUpdateBody, err := json.Marshal(updateMessage)
-	if err != nil {
-		log.Fatalf("Error %v", err)
-	}
-	token := Client.Publish(getTwin, 0, false, twinUpdateBody)
-	if token.Wait() && token.Error() != nil {
-		log.Fatalf("client.publish() Error in device twin get  is ", token.Error())
-	}
-}
-*/
