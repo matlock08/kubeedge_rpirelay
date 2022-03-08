@@ -8,31 +8,54 @@ import (
 	"github.com/labstack/echo/v4"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/rest"
+
+	//"k8s.io/client-go/tools/clientcmd"
+	//"path/filepath"
+	//"k8s.io/client-go/util/homedir"
+	//"flag"
 )
 
 var dynamicClient dynamic.Interface
 
-func GetRelays(c echo.Context) error {
+func GetDevices(c echo.Context) error {
 
-	result := getRelays(dynamicClient)
+	result := getDevices(dynamicClient)
 
 	return c.JSON(http.StatusOK, result)
 }
 
 // http://localhost:1323/device/relay-instance-01
-func GetRelayState(c echo.Context) error {
+func GetDeviceState(c echo.Context) error {
 	deviceName := c.Param("data")
 
-	_, ch1Value, ch2Value, ch3Value := getRelayState(dynamicClient, deviceName)
+	// TODO evaludate model to select 
+	_, model := getDevice(dynamicClient, deviceName)
 
-	return c.JSON(http.StatusOK, map[string]string{
-		"device": deviceName,
-		"ch1":    ch1Value,
-		"ch2":    ch2Value,
-		"ch3":    ch3Value})
+	if model == "relay-model" {
+		_, ch1Value, ch2Value, ch3Value := getRelayState(dynamicClient, deviceName)
+		return c.JSON(http.StatusOK, map[string]string{
+			"device": deviceName,
+			"ch1":    ch1Value,
+			"ch2":    ch2Value,
+			"ch3":    ch3Value})
+	}
+
+	if model == "dht-model" {
+		_, temperature, humidity := getDHTState(dynamicClient, deviceName)
+		return c.JSON(http.StatusOK, map[string]string{
+			"device": deviceName,
+			"temperature":    temperature,
+			"humidity":    humidity})
+	}
+
+	return c.JSON(http.StatusInternalServerError , map[string]string{
+		"device": "eror",
+	})
+	
+	
 }
 
-func PathRelayState(c echo.Context) error {
+func UpdateDeviceState(c echo.Context) error {
 	type DeviceRelay struct {
 		Device   string `json:"device"`
 		CH1Value string `json:"ch1"`
@@ -65,16 +88,17 @@ func PathRelayState(c echo.Context) error {
 }
 
 func main() {
-	// var kubeconfig *string
-	// if home := homedir.HomeDir(); home != "" {
-	// 	kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	// } else {
-	// 	kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	// }
-	// flag.Parse()
-
-	// use the current context in kubeconfig
-	// config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	/*
+	var kubeconfig *string
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	} else {
+		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	}
+	flag.Parse()	
+	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	*/
+	
 	config, err := rest.InClusterConfig()
 	if err != nil {
 		panic(err.Error())
@@ -88,11 +112,11 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
-	e.GET("/device", GetRelays)
+	e.GET("/device", GetDevices)
 
-	e.GET("/device/:data", GetRelayState)
+	e.GET("/device/:data", GetDeviceState )
 
-	e.POST("/device", PathRelayState)
+	e.POST("/device", UpdateDeviceState)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

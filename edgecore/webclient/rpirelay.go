@@ -3,12 +3,13 @@ package main
 import (
 	"encoding/json"
 	"context"
+	"fmt"
 	
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
     "k8s.io/client-go/dynamic"
-	
+		
 )
 
 var (
@@ -27,14 +28,29 @@ type patchStringValue struct {
 	Value string `json:"value"`
 }
 
-func getRelays(client dynamic.Interface) []string  {
+type deviceItem struct {
+    Device string
+	Model string
+}
+
+type deviceBox struct {
+    Items []deviceItem
+}
+
+func (box *deviceBox) AddItem(item deviceItem) []deviceItem {
+	box.Items = append(box.Items, item)
+    return box.Items
+}
+
+func getDevices(client dynamic.Interface) deviceBox  {
 	//  Create a GVR which represents an Istio Virtual Service.
 	relayServiceGVR := schema.GroupVersionResource{
 		Group:    "devices.kubeedge.io",
         Version:  "v1alpha2",
         Resource: "devices",
 	}
-	var result []string
+	//var result = make(map[string]string)
+	result := deviceBox{}
 
 	listOptions := metav1.ListOptions{}
 
@@ -46,12 +62,43 @@ func getRelays(client dynamic.Interface) []string  {
 	}	
 
     for _, device := range devices.Items {
-		
-		result = append(result, device.GetName() )
-		
+		var deviceModel = device.UnstructuredContent()["spec"].(map[string]interface{})["deviceModelRef"].(map[string]interface{})["name"].(string)
+		fmt.Printf("\nDevice: %s DeviceModel: %s \n", device.GetName() , deviceModel )
+
+		item := deviceItem{ Device: device.GetName(), Model: deviceModel }  
+		result.AddItem( item )
     }
 
 	return result
+}
+
+func getDevice(client dynamic.Interface, deviceName string) (string, string)  {
+	//  Create a GVR which represents an Istio Virtual Service.
+	relayServiceGVR := schema.GroupVersionResource{
+		Group:    "devices.kubeedge.io",
+        Version:  "v1alpha2",
+        Resource: "devices",
+	}
+	
+	listOptions := metav1.ListOptions{
+		FieldSelector: "metadata.name=" + deviceName,
+	}
+
+	//  List all of the Virtual Services.
+    devices, err := client.Resource(relayServiceGVR).Namespace("default").List(context.TODO(), listOptions)
+    
+    if err != nil {
+		panic(err.Error())
+	}	
+
+    for _, device := range devices.Items {
+		var deviceModel = device.UnstructuredContent()["spec"].(map[string]interface{})["deviceModelRef"].(map[string]interface{})["name"].(string)
+		fmt.Printf("\nDevice: %s DeviceModel: %s \n", device.GetName() , deviceModel )
+
+		return device.GetName(), deviceModel
+    }
+
+	return "", ""
 }
 
 func getRelayState(client dynamic.Interface, deviceName string) (string, string, string, string)  {
@@ -86,6 +133,37 @@ func getRelayState(client dynamic.Interface, deviceName string) (string, string,
 	return "", "", "", ""
 }
 
+func getDHTState(client dynamic.Interface, deviceName string) (string, string, string )  {
+	//  Create a GVR which represents an Istio Virtual Service.
+	relayServiceGVR := schema.GroupVersionResource{
+		Group:    "devices.kubeedge.io",
+        Version:  "v1alpha2",
+        Resource: "devices",
+	}
+
+	listOptions := metav1.ListOptions{
+		FieldSelector: "metadata.name=" + deviceName,
+	}
+
+	//  List all of the Virtual Services.
+    devices, err := client.Resource(relayServiceGVR).Namespace("default").List(context.TODO(), listOptions)
+    
+    if err != nil {
+		panic(err.Error())
+	}	
+
+    for _, device := range devices.Items {
+		twins := device.UnstructuredContent()["status"].(map[string]interface{})["twins"]
+		deviceName := device.GetName()
+		temperature := twins.([]interface{})[0].(map[string]interface{})["reported"].(map[string]interface{})["value"].(string)
+		humidity := twins.([]interface{})[1].(map[string]interface{})["reported"].(map[string]interface{})["value"].(string)
+		
+		return deviceName, temperature, humidity
+    }
+
+	return "", "", ""
+}
+
 func setRelayState(client dynamic.Interface, deviceName string, ch1 string, ch2 string, ch3 string) error {
 	//  Create a GVR which represents an Istio Virtual Service.
 	virtualServiceGVR := schema.GroupVersionResource{
@@ -116,33 +194,3 @@ func setRelayState(client dynamic.Interface, deviceName string, ch1 string, ch2 
 
 	return err
 }
-/*
-func main() {
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()
-
-	// use the current context in kubeconfig
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	if err != nil {
-		panic(err.Error())
-	}
-
-    dynamicClient, _ := dynamic.NewForConfig(config)
-
-	deviceName, ch1Value, ch2Value, ch3Value := getRelayState(dynamicClient, "relay-instance-01")
-
-	fmt.Printf("\nDevice: %s\n[CH1]: %s\n[CH2]: %s\n[CH3]: %s\n", deviceName, ch1Value, ch2Value, ch3Value)
-
-	err = setRelayState(dynamicClient, "relay-instance-01", "OFF", "OFF", "OFF")
-	if err != nil {
-		panic(err.Error())
-	}
-
-	
-}
-*/
