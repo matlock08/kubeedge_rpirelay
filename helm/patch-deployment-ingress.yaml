@@ -1,0 +1,46 @@
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: controller
+          image: >-
+            k8s.gcr.io/ingress-nginx/controller:v1.1.0@sha256:f766669fdcf3dc26347ed273a55e754b427eb4411ee075a53f30718b4499076a
+          args:
+            - /nginx-ingress-controller
+            - '--publish-service=$(POD_NAMESPACE)/ingress-nginx-controller'
+            - '--election-id=ingress-controller-leader'
+            - '--controller-class=k8s.io/ingress-nginx'
+            - '--configmap=$(POD_NAMESPACE)/ingress-nginx-controller'
+            - '--validating-webhook=:8443'
+            - '--validating-webhook-certificate=/usr/local/certificates/cert'
+            - '--validating-webhook-key=/usr/local/certificates/key'
+            - '--tcp-services-configmap=ingress-nginx/tcp-services'
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
+            - name: metrics
+              containerPort: 10254
+              protocol: TCP
+            - name: webhook
+              containerPort: 8443
+              protocol: TCP
+            - name: cloudhub
+              containerPort: 10000
+              protocol: TCP
+            - name: cloudhubquic
+              containerPort: 10001
+              protocol: TCP
+            - name: cloudhubhttps
+              containerPort: 10002
+              protocol: TCP
+            - name: cloudstream
+              containerPort: 10003
+              protocol: TCP
+            - name: tunnelnode
+              containerPort: 10004
+              protocol: TCP

@@ -6,7 +6,7 @@ apt-get install docker.io -y
 usermod -aG docker $USER
 
 KUBERNETES_VERSION=v1.20.12
-KUBEEDGE_VERSION=1.9.1
+KUBEEDGE_VERSION=1.10.0
 
 
 echo "Downloading Minikube"

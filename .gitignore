@@ -20,3 +20,5 @@ edgecore/rpirelay/vendor/
 
 # Go workspace file
 go.work
+
+helm/k8s-master-sfo3-kubeconfig.yaml

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: ingress-nginx
+data:
+  10000: "kubeedge/cloudcore:10000"
+  10001: "kubeedge/cloudcore:10001"
+  10002: "kubeedge/cloudcore:10002"
+  10003: "kubeedge/cloudcore:10003"
+  10004: "kubeedge/cloudcore:10004"

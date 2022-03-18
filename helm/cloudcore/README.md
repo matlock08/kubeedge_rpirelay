@@ -5,7 +5,7 @@ Visit https://github.com/kubeedge/kubeedge for more information.
 ## Install examples
 
 ```
-helm upgrade --install cloudcore ./cloudcore --namespace kubeedge --create-namespace -f ./cloudcore/values.yaml --set cloudCore.modules.cloudHub.advertiseAddress[0]=192.168.88.6 
+helm upgrade --install cloudcore ./cloudcore --namespace kubeedge --create-namespace -f ./cloudcore/values.yaml --set cloudCore.modules.cloudHub.advertiseAddress[0]=192.168.88.6
 ```
 
 > Note that the parameter `cloudCore.modules.cloudHub.advertiseAddress` is indispensable to start the KubeEdge cloudcore component on the cloud side.

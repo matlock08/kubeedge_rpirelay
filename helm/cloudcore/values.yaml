@@ -1,14 +1,14 @@
 # Default values for kubeedge.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-appVersion: "1.9.1"
+appVersion: "1.10.0"
 
 cloudCore:
   replicaCount: 1
   hostNetWork: "false"
   image:
     repository: "kubeedge/cloudcore"
-    tag: "v1.9.1"
+    tag: "v1.10.0"
     pullPolicy: "IfNotPresent"
     pullSecrets: []
   securityContext:
@@ -38,12 +38,12 @@ cloudCore:
       # Causion!: Leave this entry to empty will cause CloudCore to exit abnormally once KubeEdge is enabled.
       # At least a public IP Address or an IP which can be accessed by edge nodes must be provided!
       advertiseAddress:
-        - "143.244.210.104"
+        - "143.198.246.186"
       nodeLimit: "1000"
       websocket:
         enable: "true"
       quic:
-        enable: "true"
+        enable: "false"
         maxIncomingStreams: "10000"
       https:
         enable: "true"
@@ -68,7 +68,7 @@ iptablesManager:
   hostNetWork: true
   image:
     repository: "kubeedge/iptables-manager"
-    tag: "v1.9.1"
+    tag: "v1.10.0"
     pullPolicy: "IfNotPresent"
     pullSecrets: []
   securityContext:
