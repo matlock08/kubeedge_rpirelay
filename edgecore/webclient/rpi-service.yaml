@@ -8,4 +8,4 @@ spec:
   - port: 80
     targetPort: 1323
   selector:
-    app: rpi-webclient-service
+    app: webclient
