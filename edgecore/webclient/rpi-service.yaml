@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rpi-webclient-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 1323
+  selector:
+    app: rpi-webclient-service
