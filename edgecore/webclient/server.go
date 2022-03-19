@@ -8,7 +8,6 @@ import (
 	"github.com/labstack/echo/v4"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/rest"
-
 	//"k8s.io/client-go/tools/clientcmd"
 	//"path/filepath"
 	//"k8s.io/client-go/util/homedir"
@@ -28,7 +27,7 @@ func GetDevices(c echo.Context) error {
 func GetDeviceState(c echo.Context) error {
 	deviceName := c.Param("data")
 
-	// TODO evaludate model to select 
+	// TODO evaludate model to select
 	_, model := getDevice(dynamicClient, deviceName)
 
 	if model == "relay-model" {
@@ -43,16 +42,15 @@ func GetDeviceState(c echo.Context) error {
 	if model == "dht-model" {
 		_, temperature, humidity := getDHTState(dynamicClient, deviceName)
 		return c.JSON(http.StatusOK, map[string]string{
-			"device": deviceName,
-			"temperature":    temperature,
+			"device":      deviceName,
+			"temperature": temperature,
 			"humidity":    humidity})
 	}
 
-	return c.JSON(http.StatusInternalServerError , map[string]string{
+	return c.JSON(http.StatusInternalServerError, map[string]string{
 		"device": "eror",
 	})
-	
-	
+
 }
 
 func UpdateDeviceState(c echo.Context) error {
@@ -80,6 +78,9 @@ func UpdateDeviceState(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error)
 	}
 
+	// Todo validate how to override correct values
+	_, deviceRelay.CH1Value, deviceRelay.CH2Value, deviceRelay.CH3Value = getRelayState(dynamicClient, deviceRelay.Device)
+
 	return c.JSON(http.StatusOK, map[string]string{
 		"device": deviceRelay.Device,
 		"ch1":    deviceRelay.CH1Value,
@@ -89,16 +90,16 @@ func UpdateDeviceState(c echo.Context) error {
 
 func main() {
 	/*
-	var kubeconfig *string
-	if home := homedir.HomeDir(); home != "" {
-		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-	} else {
-		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-	}
-	flag.Parse()	
-	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+		var kubeconfig *string
+		if home := homedir.HomeDir(); home != "" {
+			kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+		} else {
+			kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+		}
+		flag.Parse()
+		config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	*/
-	
+
 	config, err := rest.InClusterConfig()
 	if err != nil {
 		panic(err.Error())
@@ -114,7 +115,7 @@ func main() {
 
 	e.GET("/device", GetDevices)
 
-	e.GET("/device/:data", GetDeviceState )
+	e.GET("/device/:data", GetDeviceState)
 
 	e.POST("/device", UpdateDeviceState)
 

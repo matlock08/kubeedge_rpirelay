@@ -1,4 +1,4 @@
-module github.com/kubeedge/examples/traffic-light
+module github.com/kubeedge/examples/relay
 
 go 1.14
 
