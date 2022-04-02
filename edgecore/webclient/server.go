@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/rest"
 	//"k8s.io/client-go/tools/clientcmd"
@@ -89,16 +90,6 @@ func UpdateDeviceState(c echo.Context) error {
 }
 
 func main() {
-	/*
-		var kubeconfig *string
-		if home := homedir.HomeDir(); home != "" {
-			kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
-		} else {
-			kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
-		}
-		flag.Parse()
-		config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-	*/
 
 	config, err := rest.InClusterConfig()
 	if err != nil {
@@ -108,6 +99,13 @@ func main() {
 	dynamicClient, _ = dynamic.NewForConfig(config)
 
 	e := echo.New()
+
+	e.Use(middleware.KeyAuthWithConfig(middleware.KeyAuthConfig{
+		KeyLookup: "header:Authorization",
+		Validator: func(key string, c echo.Context) (bool, error) {
+			return key == "valid-key", nil
+		},
+	}))
 
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")

@@ -24,7 +24,7 @@ spec:
                 operator: DoesNotExist                
       containers:
       - name: webclient
-        image: matlock08/kubeedge-client:0.0.1
+        image: matlock08/kubeedge-client:0.0.2
         command: ["/client/client"]
         args: [""]
         ports:
