@@ -29,6 +29,9 @@ spec:
         volumeMounts:
         - name: config-volume
           mountPath: /opt/kubeedge/
+      tolerations:
+      - key: "node.kubernetes.io/unreachable"
+        operator: "Exists"
       volumes:
       - name: config-volume
         configMap:

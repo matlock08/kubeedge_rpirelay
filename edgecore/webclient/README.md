@@ -5,6 +5,8 @@ Now we will deploy a Web Client in the kubernetes cluster to allow us to monitor
 You will need to update the rpi-ingress.yaml to reflect your host domain
 
 ```
+kubectl apply -f webclient/deploy.yaml --kubeconfig k8s-master-sfo3-kubeconfig.yaml
+
 kubectl apply -f webclient/clusterrole.yaml --kubeconfig k8s-master-sfo3-kubeconfig.yaml
 
 kubectl apply -f webclient/clusterrolebinding.yaml --kubeconfig k8s-master-sfo3-kubeconfig.yaml

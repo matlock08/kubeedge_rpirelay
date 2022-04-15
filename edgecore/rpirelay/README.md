@@ -53,5 +53,5 @@ kubectl apply -f rpirelay/crd/model.yaml --kubeconfig k8s-master-sfo3-kubeconfig
 
 kubectl apply -f rpirelay/crd/instance.yaml --kubeconfig k8s-master-sfo3-kubeconfig.yaml
 
-kubectl apply -f rpirelay/crd/deploy.yaml --kubeconfig k8s-master-sfo3-kubeconfig.yaml
+kubectl apply -f rpirelay/deploy.yaml --kubeconfig k8s-master-sfo3-kubeconfig.yaml
 ```
