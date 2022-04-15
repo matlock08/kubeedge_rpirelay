@@ -35,7 +35,7 @@ tcp ports to the ingress configuration so it sends all the request to the cloudc
 
 We need to apply the ConfigMap that is used by the ingress controller to map those ports to the services we want with below command.
 
-```kubectl apply -f tcp-services-ConfigMap.yaml --kubeconfig```
+```kubectl apply -f tcp-services-ConfigMap.yaml --kubeconfig k8s-master-sfo3-kubeconfig.yaml```
 
 Once we have added the Confimap we need to path the ingress controller to add the same ports and to add the argument that specifices the location of the 
 configmap.
@@ -66,10 +66,12 @@ some of those applications are not needed or conflict with KubeEdge edgecore nod
 
 So will change the affinity to exclude from them all the nodes from edgecore by using the label node-role.kubernetes.io/edge in below daemonset
 
-```kubectl patch ds cilium --namespace kube-system --patch "$(cat patch-ds.yaml)" --kubeconfig k8s-master-sfo3-kubeconfig.yaml```
-```kubectl patch ds csi-do-node --namespace kube-system --patch "$(cat patch-ds.yaml)" --kubeconfig k8s-master-sfo3-kubeconfig.yaml```
-```kubectl patch ds do-node-agent --namespace kube-system --patch "$(cat patch-ds.yaml)" --kubeconfig k8s-master-sfo3-kubeconfig.yaml```
-```kubectl patch ds kube-proxy --namespace kube-system --patch "$(cat patch-ds.yaml)" --kubeconfig k8s-master-sfo3-kubeconfig.yaml```
+```
+kubectl patch ds cilium --namespace kube-system --patch "$(cat patch-ds.yaml)" --kubeconfig k8s-master-sfo3-kubeconfig.yaml
+kubectl patch ds csi-do-node --namespace kube-system --patch "$(cat patch-ds.yaml)" --kubeconfig k8s-master-sfo3-kubeconfig.yaml
+kubectl patch ds do-node-agent --namespace kube-system --patch "$(cat patch-ds.yaml)" --kubeconfig k8s-master-sfo3-kubeconfig.yaml
+kubectl patch ds kube-proxy --namespace kube-system --patch "$(cat patch-ds.yaml)" --kubeconfig k8s-master-sfo3-kubeconfig.yaml
+```
 
 After that we should be able to test that cloudcore is exposed by accessing http://EXTERNAL-IP:10000 and we should get a message like this 
 ***Client sent an HTTP request to an HTTPS server***.
