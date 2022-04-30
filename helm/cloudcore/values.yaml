@@ -50,7 +50,7 @@ cloudCore:
     cloudStream:
       enable: "true"
     dynamicController:
-      enable: "false"
+      enable: "true"
     router:
       enable: "false"
   service:
@@ -64,7 +64,7 @@ cloudCore:
 
 iptablesManager:
   enable: "true"
-  mode: "internal"
+  mode: "external"
   hostNetWork: true
   image:
     repository: "kubeedge/iptables-manager"
