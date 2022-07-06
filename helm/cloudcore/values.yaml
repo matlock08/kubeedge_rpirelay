@@ -62,37 +62,3 @@ cloudCore:
     cloudstreamNodePort: "10003"
     tunnelNodePort: "10004"
 
-iptablesManager:
-  enable: "true"
-  mode: "external"
-  hostNetWork: true
-  image:
-    repository: "kubeedge/iptables-manager"
-    tag: "v1.10.0"
-    pullPolicy: "IfNotPresent"
-    pullSecrets: []
-  securityContext:
-    capabilities:
-      add:
-        - NET_ADMIN
-        - NET_RAW
-  labels:
-    k8s-app: iptables-manager
-    kubeedge: iptables-manager
-  annotations: {}
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: node-role.kubernetes.io/edge
-            operator: DoesNotExist
-  tolerations: {}
-  nodeSelector: {}
-  resources:
-    limits:
-      cpu: 200m
-      memory: 50Mi
-    requests:
-      cpu: 100m
-      memory: 25Mi

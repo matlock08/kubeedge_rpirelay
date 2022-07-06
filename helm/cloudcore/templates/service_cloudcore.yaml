@@ -6,6 +6,7 @@ metadata:
   labels: {{- toYaml . | nindent 4 }}
   {{- end }}
   name: cloudcore
+  namespace: kubeedge
 spec:
   {{- if and (eq .Values.cloudCore.service.type "NodePort") (eq .Values.cloudCore.hostNetWork "false") }}
   type: {{ .Values.cloudCore.service.type }}
