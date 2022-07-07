@@ -38,12 +38,12 @@ cloudCore:
       # Causion!: Leave this entry to empty will cause CloudCore to exit abnormally once KubeEdge is enabled.
       # At least a public IP Address or an IP which can be accessed by edge nodes must be provided!
       advertiseAddress:
-        - "XXX.XXX.XXX.XXX"
+        - "143.244.211.60"
       nodeLimit: "1000"
       websocket:
         enable: "true"
       quic:
-        enable: "false"
+        enable: "true"
         maxIncomingStreams: "10000"
       https:
         enable: "true"

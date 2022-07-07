@@ -5,7 +5,7 @@ spec:
       containers:
         - name: controller
           image: >-
-            k8s.gcr.io/ingress-nginx/controller:v1.1.0@sha256:f766669fdcf3dc26347ed273a55e754b427eb4411ee075a53f30718b4499076a
+            k8s.gcr.io/ingress-nginx/controller:v1.2.1@sha256:5516d103a9c2ecc4f026efbd4b40662ce22dc1f824fb129ed121460aaa5c47f8
           args:
             - /nginx-ingress-controller
             - '--publish-service=$(POD_NAMESPACE)/ingress-nginx-controller'
