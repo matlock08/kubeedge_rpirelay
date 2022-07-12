@@ -111,11 +111,11 @@ func main() {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
-	e.GET("/device", GetDevices)
+	e.GET("/rpi/device", GetDevices)
 
-	e.GET("/device/:data", GetDeviceState)
+	e.GET("/rpi/device/:data", GetDeviceState)
 
-	e.POST("/device", UpdateDeviceState)
+	e.POST("/rpi/device", UpdateDeviceState)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
