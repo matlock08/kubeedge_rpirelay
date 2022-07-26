@@ -20,6 +20,7 @@ edgecore/rpirelay/vendor/
 edgecore/rpirelay/relay
 webclient/client
 
+.DS_Store
 
 # Go workspace file
 go.work

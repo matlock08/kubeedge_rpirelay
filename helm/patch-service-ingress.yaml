@@ -16,25 +16,20 @@ spec:
       protocol: TCP
       port: 10000
       targetPort: 10000
-      nodePort: 31100
     - name: cloudhubquic
       protocol: TCP
       port: 10001
       targetPort: 10001
-      nodePort: 31101
     - name: cloudhubhttps
       protocol: TCP
       port: 10002
       targetPort: 10002
-      nodePort: 31102
     - name: cloudstream
       protocol: TCP
       port: 10003
       targetPort: 10003
-      nodePort: 31103
     - name: tunnelnode
       protocol: TCP
       port: 10004
       targetPort: 10004
-      nodePort: 31104
   
