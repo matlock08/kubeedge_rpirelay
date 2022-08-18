@@ -1,0 +1,14 @@
+{
+  "kind": "Node",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": node1,
+    "labels": {
+      "name": node1,
+      "node-role.kubernetes.io/edge": "",
+      "kubernetes.io/hostname": node1,
+      devicetype: raspberrypi,
+      sensor: rpirelay
+    }
+  }
+}
